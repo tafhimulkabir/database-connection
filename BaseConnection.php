@@ -14,8 +14,16 @@ declare(strict_types=1);
 
 namespace App\Connection;
 
-// Ensure CONNECT_TO_DB_AND_CASH is defined, or return a 404 response and exit.
-!defined('CONNECT_TO_DB_AND_CASH') && http_response_code(404) && exit;
+use PDO;
+use App\Enum\EnumDatabase;
+
+const BASE_URI = __DIR__ . DIRECTORY_SEPARATOR;
+
+require_once BASE_URI . 'Enum' . DIRECTORY_SEPARATOR . 'EnumDatabase.php';
+
+require_once BASE_URI . 'Database' . DIRECTORY_SEPARATOR . 'MySQL.php';
+require_once BASE_URI . 'Database' . DIRECTORY_SEPARATOR . 'PostgreSQL.php';
+require_once BASE_URI . 'Database' . DIRECTORY_SEPARATOR . 'SQLite.php';
 
 /**
  * BaseConnection
@@ -27,8 +35,9 @@ namespace App\Connection;
  */
 final class BaseConnection
 {
-    private static ?BaseConnection $instance = null;
+    private static null | BaseConnection $instance = null;
     private static array $mainConfig = [];
+    private PDO $dbConnection;
 
     /**
      * Private constructor to prevent external instantiation.
@@ -38,6 +47,8 @@ final class BaseConnection
     private function __construct(array $config)
     {
         self::$mainConfig = $config;
+
+        $this->dbConnection = $this->setDatabaseType(EnumDatabase::setDb('mysql'));
     }
 
     /**
@@ -49,4 +60,20 @@ final class BaseConnection
     {
         return self::$instance ?? self::$instance = new BaseConnection($config);
     }
+
+    private function setDatabaseType(string $database_type) : PDO | string
+    {
+        return match($database_type) {
+            EnumDatabase::MySQL         => new \App\Database\MySQL(),
+            EnumDatabase::PostgreSQL    => new \App\Database\PostgreSQL(),
+            EnumDatabase::SqLite        => new \App\Database\SqLite(),
+            default         => 'Unsupported database type: ' . $database_type . '!'
+        };
+    }
+
+    public function connect() : PDO
+    {
+        return $this->dbConnection;
+    }
+
 }

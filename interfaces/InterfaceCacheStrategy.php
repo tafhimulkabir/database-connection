@@ -4,8 +4,8 @@
  */
 declare(strict_types = 1);
 
-namespace App\Database\Cash;
+namespace App\Interfaces;
 
-interface CacheStrategy {
+interface InterfaceCacheStrategy {
     public function connect();
 }

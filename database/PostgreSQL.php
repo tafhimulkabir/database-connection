@@ -1,32 +1,57 @@
 <?php
 /**
- * Database Connection using MySQL
+ * PostgreSQL Database Connection Class
+ *
+ * This class provides a PostgreSQL database connection implementation
+ * that adheres to the InterfaceDatabaseStrategy interface.
+ *
+ * @version 0.1.0
+ * @license Public Domain
+ * @package App\Database
  */
+
 declare(strict_types = 1);
 
-namespace App\Database\Connection;
+namespace App\Database;
 
+// Include the necessary interface
 require_once BASE_URI . DIRECTORY_SEPARATOR . 'DatabaseStrategy.php';
 
-class PostgreSQL implements DatabaseStrategy
-{
-    private $host;
-    private $port;
-    private $username;
-    private $password;
-    private $database;
+use PDO;
+use PDOException;
+use App\Interfaces\InterfaceDatabaseStrategy;
 
-    public function __construct($db_host, $db_port, $db_username, $db_password, $db_database)
+class PostgreSQL implements InterfaceDatabaseStrategy
+{
+    private PDO $connect;
+
+    /**
+     * Establishes a database connection.
+     *
+     * @param string $db_host     The database host.
+     * @param int    $db_port     The database port.
+     * @param string $db_user     The database username.
+     * @param string $db_pass     The database password.
+     * @param string $db_name     The database name.
+     *
+     * @return PDO|null The PDO database connection or null on failure.
+     */
+    public function connect(string $db_host, int $db_port, string $db_user, string | null $db_pass, string $db_name) : PDO | null
     {
-        $this->host         = $db_host;
-        $this->port         = $db_port;
-        $this->username     = $db_username;
-        $this->password     = $db_password;
-        $this->database     = $db_database;
-    }
-    
-    public function connect()
-    {
-        echo "Connecting to PostgreSQL database '{$this->database}' on '{$this->host}:{$this->port}' with username '{$this->username}'\n";
+        $this->connect = null;
+
+        try {
+            
+            $this->connect = new PDO('mysql:host=' . $db_host . ';dbname=' . $db_name, $db_user, $db_pass); // Create a PDO database connection
+            
+            $this->connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set PDO error mode to exceptions
+
+        } catch (PDOException $e) {
+
+            echo 'Connection Error: ' . $e->getMessage(); // Handle connection error
+
+        }
+
+        return $this->connect;
     }
 }
