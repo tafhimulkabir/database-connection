@@ -25,8 +25,17 @@ class MySQL implements DatabaseStrategy
         $this->database     = $db_database;
     }
 
-    public function connect()
-    {
-        echo "Connecting to MySQL database '{$this->database}' on '{$this->host}:{$this->port}' with username '{$this->username}'\n";
-    }
+
+    public function connect() {
+        $this->conn = null;
+  
+        try { 
+          $this->conn = new PDO('mysql:host=' . $this->host . ';dbname=' . $this->db_name, $this->username, $this->password);
+          $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch(PDOException $e) {
+          echo 'Connection Error: ' . $e->getMessage();
+        }
+  
+        return $this->conn;
+      }
 }

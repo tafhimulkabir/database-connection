@@ -25,9 +25,9 @@ use App\Database\Cash\Memcached;
 /**
  * Database Class
  */
-final class Database
+final class Connect
 {
-    private static Database $instance = null;
+    private static Connect $instance = null;
     private array $dbStrategies = [];
     private array $cashStrategies = [];
 
