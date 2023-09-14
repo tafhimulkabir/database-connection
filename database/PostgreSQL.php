@@ -26,7 +26,7 @@ class PostgreSQL implements InterfaceDatabaseStrategy
     private PDO $connect;
 
     /**
-     * Establishes a database connection.
+     * Establishes a PostgreSQL database connection.
      *
      * @param string $db_host     The database host.
      * @param int    $db_port     The database port.
@@ -41,15 +41,13 @@ class PostgreSQL implements InterfaceDatabaseStrategy
         $this->connect = null;
 
         try {
+            // Create a PDO database connection for PostgreSQL
+            $this->connect = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name;user=$db_user;password=$db_pass");
             
-            $this->connect = new PDO('mysql:host=' . $db_host . ';dbname=' . $db_name, $db_user, $db_pass); // Create a PDO database connection
-            
-            $this->connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set PDO error mode to exceptions
-
+            // Set PDO error mode to exceptions
+            $this->connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-
             echo 'Connection Error: ' . $e->getMessage(); // Handle connection error
-
         }
 
         return $this->connect;
