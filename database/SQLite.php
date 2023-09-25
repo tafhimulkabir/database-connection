@@ -28,17 +28,15 @@ class SQLite implements InterfaceDatabaseStrategy
     /**
      * Establishes an SQLite database connection.
      *
-     * @param string $db_host     The SQLite database file path.
-     * @param int    $db_port     Not used for SQLite (can be set to 0).
-     * @param string $db_user     Not used for SQLite (can be an empty string).
-     * @param string $db_pass     Not used for SQLite (can be an empty string).
-     * @param string $db_name     Not used for SQLite (can be an empty string).
+     * @param array $db_data Hold all the information need to connect to database.
      *
      * @return PDO|null The PDO database connection or null on failure.
      */
-    public function connect(string $db_host, int $db_port, string $db_user, string | null $db_pass, string $db_name) : PDO | null
+    public function connect(array $db_data) : PDO | null
     {
         $this->connect = null;
+
+        $db_host = $db_data['host'];
 
         try {
             // Create a PDO database connection for SQLite

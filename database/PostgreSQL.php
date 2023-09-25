@@ -28,17 +28,19 @@ class PostgreSQL implements InterfaceDatabaseStrategy
     /**
      * Establishes a PostgreSQL database connection.
      *
-     * @param string $db_host     The database host.
-     * @param int    $db_port     The database port.
-     * @param string $db_user     The database username.
-     * @param string $db_pass     The database password.
-     * @param string $db_name     The database name.
+     * @param array $db_data Hold all the information need to connect to database.
      *
      * @return PDO|null The PDO database connection or null on failure.
      */
-    public function connect(string $db_host, int $db_port, string $db_user, string | null $db_pass, string $db_name) : PDO | null
+    public function connect(array $db_data) : PDO | null
     {
         $this->connect = null;
+
+        $db_host = $db_data['host'];
+        $db_port = $db_data['port'];
+        $db_name = $db_data['name'];
+        $db_user = $db_data['user'];
+        $db_pass = $db_data['pass'];
 
         try {
             // Create a PDO database connection for PostgreSQL

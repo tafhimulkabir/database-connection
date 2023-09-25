@@ -26,13 +26,9 @@ interface InterfaceDatabaseStrategy
     /**
      * Establishes a database connection.
      *
-     * @param string $db_host       The database host.
-     * @param int    $db_port       The database port.
-     * @param string $db_user       The database username.
-     * @param string|null $db_pass  The database password (optional, may be null).
-     * @param string $db_name       The database name.
+     * @param array $db_data Hold all the information need to connect to database.
      *
      * @return PDO|null The PDO database connection or null on failure.
      */
-    public function connect(string $db_host, int $db_port, string $db_user, ?string $db_pass, string $db_name) : PDO | null;
+    public function connect(array $db_data) : PDO | null;
 }

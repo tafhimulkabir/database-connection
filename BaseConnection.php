@@ -71,6 +71,11 @@ final class BaseConnection
         };
     }
 
+    /**
+     * Database Connection
+     *
+     * @return PDO
+     */
     public function connect() : PDO
     {
         return $this->dbConnection;
